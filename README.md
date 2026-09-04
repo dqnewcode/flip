@@ -1,111 +1,67 @@
 # Flip Business Signup - Playwright Automation
 
-Automated UI testing project for Flip Business signup page using Playwright with TypeScript and Page Object Model (POM) pattern.
-
-## 📋 Table of Contents
-- [Project Overview](#project-overview)
-- [Features](#features)
-- [Project Structure](#project-structure)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Running Tests](#running-tests)
-- [Test Reports](#test-reports)
-- [Test Cases Documentation](#test-cases-documentation)
-- [Understanding the Code](#understanding-the-code)
-- [Best Practices](#best-practices)
-
----
+Automated UI testing project for Flip Business signup page using **Playwright** with **TypeScript** and **Page Object Model (POM)** pattern.
 
 ## 🎯 Project Overview
 
-This project automates testing for the **Flip Business Signup** page at `https://business.flip.id/signup`. It includes 28 comprehensive test cases covering:
-- ✅ Positive flows (successful registration)
-- ❌ Negative flows (validation testing)
-- 🔍 UI verification
-- 🧭 Navigation testing
-- ♿ Accessibility checks
+| Item | Detail |
+|------|--------|
+| **Target URL** | https://business.flip.id/signup |
+| **Framework** | Playwright |
+| **Language** | TypeScript |
+| **Pattern** | Page Object Model (POM) |
+| **Test Cases** | 14 TC (TC-01 to TC-14) |
 
-## ✨ Features
+### Test Coverage
 
-- **TypeScript**: Strongly typed code for better maintainability
-- **Page Object Model (POM)**: Organized, reusable page classes
-- **28 Test Cases**: Comprehensive coverage of signup functionality
-- **Screenshot Capture**: Screenshots for every test execution
-- **PDF Test Report**: Professional test report with screenshots
-- **Excel Test Cases**: Detailed test case documentation
-- **Automatic Test Data**: Dynamic test data generation
+- ✅ **Positive Flow** - Valid signup for Perseorangan & Badan Usaha
+- ❌ **Negative Flow** - Email, Phone, Password validation
+- 🔧 **Functional** - Password toggle, business type selection
+- 🧭 **Navigation** - Login redirect, Terms & Privacy links
 
 ---
 
 ## 📁 Project Structure
 
 ```
-D:\flip\
+flip/
 ├── src/
-│   ├── pages/
-│   │   └── signup.page.ts          # Page Object Model for Signup page
-│   ├── fixtures/
-│   │   └── base.fixture.ts         # Custom fixtures
-│   ├── utils/
-│   │   └── helpers.ts              # Helper functions
-│   └── test-data/
-│       └── test-data.ts            # Test data generator
+│   └── pages/
+│       └── signup.page.ts          # Page Object Model
 ├── tests/
-│   └── signup.spec.ts              # Main test suite (28 test cases)
+│   └── signup.spec.ts              # 14 Test Cases
 ├── scripts/
-│   ├── generate-pdf-report.js      # PDF report generator
-│   └── generate-test-cases-excel.js # Excel test cases generator
+│   ├── generate-report-pdf.ts      # PDF Report Generator
+│   └── generate-test-cases.ts      # Excel Test Cases Generator
 ├── test-cases/
-│   └── Flip-Signup-Test-Cases-Detailed.xlsx  # Test case documentation
+│   └── Flip-Signup-Test-Cases.xlsx # Test Case Documentation
 ├── docs/
-│   └── Test-Report.pdf             # Latest test execution report
-├── test-results/                   # Test screenshots & results
-├── playwright.config.ts            # Playwright configuration
-├── package.json                    # Dependencies
-└── README.md                       # This file
+│   └── Test-Report.pdf             # Generated Test Report
+├── playwright.config.ts            # Playwright Configuration
+├── tsconfig.json                   # TypeScript Configuration
+└── package.json                    # Dependencies
 ```
 
 ---
 
 ## 🔧 Prerequisites
 
-Before running this project, ensure you have:
-
-1. **Node.js** (v18 or higher)
-   - Check: `node --version`
-   - Download: https://nodejs.org/
-
-2. **npm** (comes with Node.js)
-   - Check: `npm --version`
-
-3. **Git** (optional, for cloning)
-   - Check: `git --version`
+- **Node.js** v18 or higher
+- **npm** (comes with Node.js)
 
 ---
 
 ## 📦 Installation
 
-### Step 1: Navigate to Project Directory
+```bash
+# Clone repository
+git clone https://github.com/dqnewcode/flip.git
+cd flip
 
-```powershell
-cd D:\flip
-```
-
-### Step 2: Install Dependencies
-
-```powershell
+# Install dependencies
 npm install
-```
 
-This will install:
-- `@playwright/test` - Test framework
-- `exceljs` - For Excel generation
-- `pdfkit` - For PDF report generation
-- All necessary dependencies
-
-### Step 3: Install Playwright Browsers
-
-```powershell
+# Install Playwright browsers
 npx playwright install
 ```
 
@@ -113,338 +69,135 @@ npx playwright install
 
 ## 🚀 Running Tests
 
-### Run All Tests (Headless)
-
-```powershell
+```bash
+# Run all tests (headless)
 npm test
-```
 
-- Runs in headless mode (no browser window)
-- Fastest execution
-- Best for CI/CD pipelines
-
-### Run Tests in Headed Mode (See Browser)
-
-```powershell
+# Run with browser visible
 npm run test:headed
-```
 
-- Opens browser window
-- Watch tests execute in real-time
-- Best for debugging
-
-### Run Tests in UI Mode (Interactive)
-
-```powershell
+# Run in interactive UI mode
 npm run test:ui
-```
 
-- Opens Playwright UI
-- Step through tests
-- Time-travel debugging
+# Run in debug mode
+npm run test:debug
 
-### Run Specific Test
-
-```powershell
+# Run specific test
 npx playwright test --grep "TC-01"
 ```
 
-Replace "TC-01" with any test case number or name.
+---
 
-### Debug Mode
+## 📊 Generate Reports
 
-```powershell
-npx playwright test --debug
+```bash
+# Generate PDF report with screenshots
+npm run report
+
+# Generate Excel test cases
+npm run generate:testcases
+
+# View Playwright HTML report
+npm run report:html
 ```
 
-Opens Playwright Inspector for step-by-step debugging.
+### Report Outputs
+
+| Report | Location |
+|--------|----------|
+| PDF Report | `docs/Test-Report.pdf` |
+| Excel Test Cases | `test-cases/Flip-Signup-Test-Cases.xlsx` |
+| HTML Report | Run `npm run report:html` |
 
 ---
 
-## 📊 Test Reports
+## 📝 Test Cases
 
-### 1. Generate PDF Report
-
-After running tests, generate PDF report:
-
-```powershell
-npm run report:pdf
-```
-
-**Output**: `D:\flip\docs\Test-Report.pdf`
-
-The PDF includes:
-- ✅ Test execution summary
-- 📸 Screenshots for each test case
-- 📈 Pass/Fail statistics
-- ⏱️ Execution time
-- 🎯 Success rate
-
-### 2. View HTML Report
-
-Playwright generates HTML report automatically:
-
-```powershell
-npx playwright show-report
-```
-
-Opens interactive HTML report in browser.
-
-### 3. Excel Test Cases
-
-View detailed test case documentation:
-
-```powershell
-Start-Process "D:\flip\test-cases\Flip-Signup-Test-Cases-Detailed.xlsx"
-```
-
-Or navigate to `test-cases/` folder and open the Excel file.
+| TC ID | Test Case | Category | Priority |
+|-------|-----------|----------|----------|
+| TC-01 | Verify Signup Page Elements Display | UI | High |
+| TC-02 | Submit Valid Signup Form - Perseorangan | Positive | Critical |
+| TC-03 | Submit Valid Signup Form - Badan Usaha | Positive | Critical |
+| TC-04 | Validate Empty Form Submission | Negative | High |
+| TC-05 | Validate Invalid Email Format | Negative | Medium |
+| TC-06 | Validate Email Without Domain | Negative | Medium |
+| TC-07 | Validate Short Phone Number | Negative | Medium |
+| TC-08 | Validate Phone Number With Letters | Negative | Medium |
+| TC-09 | Validate Weak Password | Negative | High |
+| TC-10 | Validate Password Without Special Chars | Negative | Medium |
+| TC-11 | Toggle Password Visibility | Functional | Medium |
+| TC-12 | Navigate To Login Page | Navigation | Medium |
+| TC-13 | Verify Terms And Conditions Link | Navigation | Low |
+| TC-14 | Verify Privacy Policy Link | Navigation | Low |
 
 ---
 
-## 📝 Test Cases Documentation
+## 💻 Code Structure
 
-### Excel File Structure
-
-The `Flip-Signup-Test-Cases-Detailed.xlsx` contains:
-
-| Column | Description |
-|--------|-------------|
-| **TC ID** | Test case identifier (TC-01 to TC-28) |
-| **Test Case Title** | Descriptive test case name |
-| **Category** | Test category (Positive Flow, Negative - Validation, UI Verification, etc.) |
-| **Priority** | Critical, High, Medium, Low |
-| **Pre-conditions** | Required state before test |
-| **Test Steps** | Step-by-step execution instructions |
-| **Test Data** | Input data used in test |
-| **Expected Result** | What should happen |
-| **Status** | Automated/Manual |
-
-### Test Case Categories
-
-| Category | Count | Description |
-|----------|-------|-------------|
-| **Positive Flow** | 2 | Successful registration scenarios |
-| **Negative - Email Validation** | 6 | Invalid email format tests |
-| **Negative - Phone Validation** | 4 | Invalid phone number tests |
-| **Negative - Password Validation** | 6 | Password requirement tests |
-| **UI Verification** | 2 | Page element checks |
-| **Navigation** | 2 | Link and navigation tests |
-| **Functional** | 2 | Feature functionality tests |
-| **Negative - Business Logic** | 1 | Duplicate registration |
-| **Boundary** | 1 | Edge case testing |
-| **Accessibility** | 1 | A11y compliance |
-
----
-
-## 💻 Understanding the Code
-
-### 1. Page Object Model (POM)
-
-**File**: `src/pages/signup.page.ts`
+### Page Object Model (`src/pages/signup.page.ts`)
 
 ```typescript
 export class SignupPage {
-  // Locators - CSS selectors for page elements
-  readonly nameInput = 'input[name="name"]';
-  readonly emailInput = 'input[name="email"]';
+  // Locators
+  readonly nameInput: Locator;
+  readonly emailInput: Locator;
+  readonly submitButton: Locator;
   
-  // Methods - Actions you can perform
-  async fillForm(data: SignupData) {
-    await this.page.fill(this.nameInput, data.name);
-    // ...
-  }
+  // Actions
+  async fillSignupForm(data: SignupData) { ... }
+  async clickSubmit() { ... }
+  async verifyAllElementsPresent() { ... }
 }
 ```
 
-**Why POM?**
-- ✅ Reusable code
-- ✅ Easy maintenance (change locator in one place)
-- ✅ Readable tests
-- ✅ Separation of concerns
-
-### 2. Test Structure
-
-**File**: `tests/signup.spec.ts`
+### Test Example (`tests/signup.spec.ts`)
 
 ```typescript
-test('TC-01: Verify Signup Page Elements Display', async ({ signupPage }) => {
-  // Arrange - Setup
-  await signupPage.goto();
+test('TC-01: Verify Signup Page Elements Display', async ({ page }) => {
+  const signupPage = new SignupPage(page);
+  const elements = await signupPage.verifyAllElementsPresent();
   
-  // Assert - Verify
-  await expect(signupPage.page.locator('h1')).toBeVisible();
+  expect(elements.nameInput).toBe(true);
+  expect(elements.emailInput).toBe(true);
+  expect(elements.submitButton).toBe(true);
 });
 ```
 
-### 3. Test Data Generation
+---
 
-**File**: `src/test-data/test-data.ts`
+## 📜 Available Commands
 
-```typescript
-export const generateTestData = {
-  uniqueEmail: () => `test.${Date.now()}@example.com`,
-  validPhone: () => '081234567890',
-  // ...
-};
-```
-
-**Why?**
-- ✅ Unique data per test run
-- ✅ Avoid data conflicts
-- ✅ Realistic test scenarios
-
-### 4. Configuration
-
-**File**: `playwright.config.ts`
-
-Key settings:
-```typescript
-{
-  use: {
-    baseURL: 'https://business.flip.id',
-    screenshot: 'on',  // Capture screenshots
-    video: 'retain-on-failure',  // Video on failure
-  },
-  projects: [
-    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
-  ]
-}
-```
+| Command | Description |
+|---------|-------------|
+| `npm test` | Run all tests (headless) |
+| `npm run test:headed` | Run with browser visible |
+| `npm run test:ui` | Interactive UI mode |
+| `npm run test:debug` | Debug mode |
+| `npm run report` | Generate PDF report |
+| `npm run generate:testcases` | Generate Excel test cases |
+| `npm run report:html` | View HTML report |
 
 ---
 
-## 🏆 Best Practices
+## ✨ Features
 
-### ✅ DO:
-
-1. **Run tests before pushing code**
-   ```powershell
-   npm test
-   ```
-
-2. **Check test report after execution**
-   ```powershell
-   npm run report:pdf
-   ```
-
-3. **Use descriptive test names**
-   ```typescript
-   test('TC-05: Validate Email Without @ and Domain', ...)
-   ```
-
-4. **Keep Page Objects updated**
-   - When UI changes, update `signup.page.ts` only
-
-5. **Add new tests for new features**
-   - Follow existing test structure
-   - Update test cases Excel
-
-### ❌ DON'T:
-
-1. **Don't hardcode test data**
-   ```typescript
-   // ❌ Bad
-   await page.fill('input', 'test@example.com');
-   
-   // ✅ Good
-   await page.fill('input', generateTestData.uniqueEmail());
-   ```
-
-2. **Don't use sleep/wait arbitrarily**
-   ```typescript
-   // ❌ Bad
-   await page.waitForTimeout(5000);
-   
-   // ✅ Good
-   await page.waitForSelector('button[type="submit"]');
-   ```
-
-3. **Don't skip failed tests**
-   - Investigate and fix
-   - Update if requirements changed
+- **Full TypeScript** - Type-safe code throughout
+- **Page Object Model** - Clean separation of concerns
+- **14 Test Cases** - Comprehensive coverage
+- **PDF Reports** - Professional test reports with screenshots
+- **Excel Documentation** - Detailed test case documentation
+- **Unique Test Data** - Timestamp-based email generation
 
 ---
 
-## 🔍 Troubleshooting
+## 🎓 Resources
 
-### Issue: Tests fail with "Timeout"
-
-**Solution**:
-```powershell
-# Increase timeout in playwright.config.ts
-timeout: 60000  # 60 seconds
-```
-
-### Issue: Browser not opening
-
-**Solution**:
-```powershell
-npx playwright install --with-deps
-```
-
-### Issue: Screenshots not captured
-
-**Solution**:
-Check `playwright.config.ts`:
-```typescript
-screenshot: 'on'  // Must be 'on', not 'only-on-failure'
-```
-
-### Issue: PDF report empty
-
-**Solution**:
-1. Run tests first: `npm test`
-2. Then generate report: `npm run report:pdf`
-
----
-
-## 📞 Support
-
-For questions or issues:
-1. Check test execution logs in `test-results/`
-2. Review Playwright documentation: https://playwright.dev/
-3. Check test case documentation in `test-cases/` folder
-
----
-
-## 📜 Commands Cheat Sheet
-
-```powershell
-# Installation
-npm install                          # Install dependencies
-npx playwright install               # Install browsers
-
-# Running Tests
-npm test                            # Run all tests (headless)
-npm run test:headed                 # Run with browser visible
-npm run test:ui                     # Run in UI mode
-npx playwright test --debug         # Debug mode
-npx playwright test --grep "TC-01"  # Run specific test
-
-# Reports
-npm run report:pdf                  # Generate PDF report
-npx playwright show-report          # Show HTML report
-
-# Utilities
-node scripts/generate-test-cases-excel.js  # Generate Excel test cases
-```
-
----
-
-## 🎓 Learning Resources
-
-- **Playwright Docs**: https://playwright.dev/docs/intro
-- **TypeScript**: https://www.typescriptlang.org/docs/
-- **Page Object Model**: https://playwright.dev/docs/pom
-- **Best Practices**: https://playwright.dev/docs/best-practices
+- [Playwright Documentation](https://playwright.dev/docs/intro)
+- [TypeScript Documentation](https://www.typescriptlang.org/docs/)
+- [Page Object Model](https://playwright.dev/docs/pom)
 
 ---
 
 ## 📄 License
 
 This project is for testing purposes for Flip Business signup functionality.
-
----
-
-**Happy Testing! 🚀**
