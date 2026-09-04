@@ -26,20 +26,27 @@ Automated UI testing project for Flip Business signup page using **Playwright** 
 ```
 flip/
 ├── src/
-│   └── pages/
-│       └── signup.page.ts          # Page Object Model
+│   ├── pages/
+│   │   └── signup.page.ts          # Page Object Model
+│   ├── fixtures/
+│   │   └── test.fixture.ts         # Test fixtures
+│   ├── test-data/
+│   │   └── signup.data.ts          # Test data
+│   └── utils/
+│       └── helpers.ts              # Helper functions
 ├── tests/
 │   └── signup.spec.ts              # 14 Test Cases
 ├── scripts/
 │   ├── generate-report-pdf.ts      # PDF Report Generator
-│   └── generate-test-cases.ts      # Excel Test Cases Generator
+│   └── generate-test-cases.ts      # Excel Generator
 ├── test-cases/
 │   └── Flip-Signup-Test-Cases.xlsx # Test Case Documentation
 ├── docs/
 │   └── Test-Report.pdf             # Generated Test Report
 ├── playwright.config.ts            # Playwright Configuration
 ├── tsconfig.json                   # TypeScript Configuration
-└── package.json                    # Dependencies
+├── package.json                    # Dependencies
+└── README.md
 ```
 
 ---
