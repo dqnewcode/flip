@@ -8,8 +8,9 @@
     "test:ui": "npx playwright test --ui",
     "test:debug": "npx playwright test --debug",
     "test:chrome": "npx playwright test --project=chromium",
-    "report": "npx playwright show-report",
-    "report:pdf": "node scripts/generate-pdf-report.js",
+    "report": "npx tsx scripts/generate-report-pdf.ts",
+    "report:html": "npx playwright show-report",
+    "generate:testcases": "npx tsx scripts/generate-test-cases.ts",
     "codegen": "npx playwright codegen https://business.flip.id/signup"
   },
   "keywords": [
@@ -22,7 +23,11 @@
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.62.1",
+    "@types/node": "^26.4.1",
+    "@types/pdfkit": "^0.17.6",
     "pdfkit": "^0.20.2",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.23.13",
     "typescript": "^7.0.2"
   },
   "dependencies": {

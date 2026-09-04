@@ -1,254 +1,235 @@
-import { Page, Locator, expect } from '@playwright/test';
+import { Page, Locator } from '@playwright/test';
 
-/**
- * Page Object Model for Flip Business Signup Page
- * URL: https://business.flip.id/signup
- * 
- * Form Structure (from live inspection):
- * - name: text input, placeholder="Masukkan nama lengkap sesuai e-KTP/Paspor", name="name"
- * - email: email input, placeholder="Masukkan alamat email bisnis", name="email"  
- * - phone: text input, placeholder="8123456789", name="phone_number"
- * - business_type: radio buttons, name="business_type", value="2" (Perseorangan), value="3" (Badan Usaha)
- * - password: password input, placeholder="Buat kata sandi yang aman", name="password"
- * - submit: button type="submit", text="Buat Akun"
- * - login: button type="button", text="Masuk"
- */
 export class SignupPage {
   readonly page: Page;
   
-  // Page URL
-  readonly url = '/signup';
-
-  // Form Fields - using exact attributes from live inspection
-  readonly namaLengkapInput: Locator;
+  // Form Input Locators
+  readonly nameInput: Locator;
   readonly emailInput: Locator;
   readonly phoneInput: Locator;
-  readonly phoneCountryCode: Locator;
   readonly passwordInput: Locator;
-  readonly passwordToggle: Locator;
-
+  
   // Business Type Radio Buttons
-  readonly tipeBisnisPerseorangan: Locator;
-  readonly tipeBisnisBadanUsaha: Locator;
-
+  readonly businessTypePerseorangan: Locator;
+  readonly businessTypeBadanUsaha: Locator;
+  
   // Buttons
-  readonly buatAkunButton: Locator;
-  readonly masukButton: Locator;
-
+  readonly submitButton: Locator;
+  readonly loginButton: Locator;
+  readonly passwordToggleButton: Locator;
+  
   // Links
-  readonly syaratKetentuanLink: Locator;
-  readonly kebijakanPrivasiLink: Locator;
-  readonly flipLogoLink: Locator;
-
-  // Logo and Branding
+  readonly termsLink: Locator;
+  readonly privacyLink: Locator;
+  
+  // Page Title
   readonly pageTitle: Locator;
-
-  // Error Messages
-  readonly errorMessages: Locator;
-
-  // Password Tips
-  readonly passwordTips: Locator;
 
   constructor(page: Page) {
     this.page = page;
-
-    // Form fields - using exact name attributes
-    this.namaLengkapInput = page.locator('input[name="name"]');
+    
+    // Input fields based on actual page analysis
+    this.nameInput = page.locator('input[name="name"]');
     this.emailInput = page.locator('input[name="email"]');
     this.phoneInput = page.locator('input[name="phone_number"]');
-    this.phoneCountryCode = page.locator('text=+62').first();
     this.passwordInput = page.locator('input[name="password"]');
     
-    // Password visibility toggle - uses data-qaid attribute
-    this.passwordToggle = page.locator('[data-qaid="qa-show-password-button"]');
-
-    // Business type radio buttons - using value attributes
-    // value="2" = Perseorangan, value="3" = Badan Usaha
-    this.tipeBisnisPerseorangan = page.locator('input[name="business_type"][value="2"]');
-    this.tipeBisnisBadanUsaha = page.locator('input[name="business_type"][value="3"]');
-
-    // Submit button
-    this.buatAkunButton = page.locator('button[type="submit"]');
-
-    // Login button (not a link, it's a button)
-    this.masukButton = page.locator('button[type="button"]').filter({ hasText: 'Masuk' });
-
+    // Business type radio buttons (value: 2=Perseorangan, 3=Badan Usaha)
+    this.businessTypePerseorangan = page.locator('input[name="business_type"][value="2"]');
+    this.businessTypeBadanUsaha = page.locator('input[name="business_type"][value="3"]');
+    
+    // Buttons
+    this.submitButton = page.locator('button[type="submit"]');
+    this.loginButton = page.locator('button:has-text("Masuk")');
+    this.passwordToggleButton = page.locator('[data-qaid*="show-password"], [data-qaid*="hide-password"]');
+    
     // Links
-    this.syaratKetentuanLink = page.locator('a[href*="terms-and-conditions#tnc"]');
-    this.kebijakanPrivasiLink = page.locator('a[href*="terms-and-conditions#policy"]');
-    this.flipLogoLink = page.locator('a[href="https://flip.id/business"]').first();
-
-    // Page title
-    this.pageTitle = page.locator('text=Buat Akun Flip For Business').first();
-
-    // Error messages
-    this.errorMessages = page.locator('[class*="error" i], [role="alert"], [class*="invalid" i]');
-
-    // Password tips section
-    this.passwordTips = page.locator('text=Tips').first();
+    this.termsLink = page.locator('a:has-text("Syarat & Ketentuan")');
+    this.privacyLink = page.locator('a:has-text("Kebijakan Privasi")');
+    
+    // Page elements
+    this.pageTitle = page.locator('h1, h2, [class*="title"], [class*="heading"]').first();
   }
 
-  /**
-   * Navigate to signup page
-   */
-  async goto(): Promise<void> {
-    await this.page.goto(this.url);
+  // Navigate to signup page
+  async goto() {
+    await this.page.goto('/signup');
     await this.page.waitForLoadState('networkidle');
   }
 
-  /**
-   * Fill the complete signup form
-   */
-  async fillSignupForm(data: {
-    namaLengkap: string;
-    email: string;
-    phone: string;
-    tipeBisnis: 'perseorangan' | 'badan_usaha';
-    password: string;
-  }): Promise<void> {
-    await this.fillNamaLengkap(data.namaLengkap);
-    await this.fillEmail(data.email);
-    await this.fillPhone(data.phone);
-    await this.selectTipeBisnis(data.tipeBisnis);
-    await this.fillPassword(data.password);
+  // Fill name field
+  async fillName(name: string) {
+    await this.nameInput.fill(name);
   }
 
-  /**
-   * Fill Nama Lengkap field
-   */
-  async fillNamaLengkap(nama: string): Promise<void> {
-    await this.namaLengkapInput.fill(nama);
-  }
-
-  /**
-   * Fill Email field
-   */
-  async fillEmail(email: string): Promise<void> {
+  // Fill email field
+  async fillEmail(email: string) {
     await this.emailInput.fill(email);
   }
 
-  /**
-   * Fill Phone number field (without country code)
-   */
-  async fillPhone(phone: string): Promise<void> {
+  // Fill phone field
+  async fillPhone(phone: string) {
     await this.phoneInput.fill(phone);
   }
 
-  /**
-   * Select Tipe Bisnis
-   */
-  async selectTipeBisnis(tipe: 'perseorangan' | 'badan_usaha'): Promise<void> {
-    if (tipe === 'perseorangan') {
-      // Click the radio input directly using force to bypass disabled check on label
-      await this.tipeBisnisPerseorangan.click({ force: true });
-    } else {
-      await this.tipeBisnisBadanUsaha.click({ force: true });
-    }
-  }
-
-  /**
-   * Fill Password field
-   */
-  async fillPassword(password: string): Promise<void> {
+  // Fill password field
+  async fillPassword(password: string) {
     await this.passwordInput.fill(password);
   }
 
-  /**
-   * Toggle password visibility
-   */
-  async togglePasswordVisibility(): Promise<void> {
-    await this.passwordToggle.click();
+  // Select business type - Perseorangan
+  async selectPerseorangan() {
+    await this.businessTypePerseorangan.click({ force: true });
   }
 
-  /**
-   * Check if password is visible
-   */
-  async isPasswordVisible(): Promise<boolean> {
-    const inputType = await this.passwordInput.getAttribute('type');
-    return inputType === 'text';
+  // Select business type - Badan Usaha
+  async selectBadanUsaha() {
+    await this.businessTypeBadanUsaha.click({ force: true });
   }
 
-  /**
-   * Click Buat Akun button
-   */
-  async clickBuatAkun(): Promise<void> {
-    await this.buatAkunButton.click();
-  }
-
-  /**
-   * Click Masuk button
-   */
-  async clickMasuk(): Promise<void> {
-    await this.masukButton.click();
-  }
-
-  /**
-   * Check if Buat Akun button is enabled
-   */
-  async isBuatAkunEnabled(): Promise<boolean> {
-    return await this.buatAkunButton.isEnabled();
-  }
-
-  /**
-   * Check if Buat Akun button is disabled (has disabled attribute or class)
-   */
-  async isBuatAkunDisabled(): Promise<boolean> {
-    const isDisabled = await this.buatAkunButton.isDisabled();
-    return isDisabled;
-  }
-
-  /**
-   * Get all visible error messages
-   */
-  async getErrorMessages(): Promise<string[]> {
-    const errors = await this.errorMessages.allTextContents();
-    return errors.filter(e => e.trim() !== '');
-  }
-
-  /**
-   * Wait for error message to appear
-   */
-  async waitForErrorMessage(expectedText: string): Promise<void> {
-    await this.page.waitForSelector(`text=${expectedText}`, { timeout: 5000 });
-  }
-
-  /**
-   * Verify all page elements are visible
-   */
-  async verifyPageElementsVisible(): Promise<void> {
-    await expect(this.namaLengkapInput).toBeVisible();
-    await expect(this.emailInput).toBeVisible();
-    await expect(this.phoneInput).toBeVisible();
-    await expect(this.passwordInput).toBeVisible();
-    await expect(this.buatAkunButton).toBeVisible();
-    await expect(this.masukButton).toBeVisible();
-  }
-
-  /**
-   * Check if Perseorangan radio is checked
-   */
-  async isPerseorangan(): Promise<boolean> {
-    return await this.tipeBisnisPerseorangan.isChecked();
-  }
-
-  /**
-   * Check if Badan Usaha radio is checked  
-   */
-  async isBadanUsaha(): Promise<boolean> {
-    return await this.tipeBisnisBadanUsaha.isChecked();
-  }
-
-  /**
-   * Complete signup flow
-   */
-  async signup(data: {
-    namaLengkap: string;
+  // Fill complete signup form
+  async fillSignupForm(data: {
+    name: string;
     email: string;
     phone: string;
-    tipeBisnis: 'perseorangan' | 'badan_usaha';
     password: string;
-  }): Promise<void> {
-    await this.fillSignupForm(data);
-    await this.clickBuatAkun();
+    businessType: 'perseorangan' | 'badanUsaha';
+  }) {
+    await this.fillName(data.name);
+    await this.fillEmail(data.email);
+    await this.fillPhone(data.phone);
+    
+    if (data.businessType === 'perseorangan') {
+      await this.selectPerseorangan();
+    } else {
+      await this.selectBadanUsaha();
+    }
+    
+    await this.fillPassword(data.password);
+  }
+
+  // Click submit button
+  async clickSubmit() {
+    // Use force click to bypass disabled state for testing validation
+    await this.submitButton.click({ force: true });
+  }
+
+  // Click login button
+  async clickLogin() {
+    await this.loginButton.click();
+  }
+
+  // Toggle password visibility
+  async togglePasswordVisibility() {
+    await this.passwordToggleButton.click();
+  }
+
+  // Get password input type (to check if visible)
+  async getPasswordInputType() {
+    return await this.passwordInput.getAttribute('type');
+  }
+
+  // Check if element is visible
+  async isNameInputVisible() {
+    return await this.nameInput.isVisible();
+  }
+
+  async isEmailInputVisible() {
+    return await this.emailInput.isVisible();
+  }
+
+  async isPhoneInputVisible() {
+    return await this.phoneInput.isVisible();
+  }
+
+  async isPasswordInputVisible() {
+    return await this.passwordInput.isVisible();
+  }
+
+  async isSubmitButtonVisible() {
+    return await this.submitButton.isVisible();
+  }
+
+  async isLoginButtonVisible() {
+    return await this.loginButton.isVisible();
+  }
+
+  async areBusinessTypeOptionsVisible() {
+    const perseorangan = await this.businessTypePerseorangan.isVisible();
+    const badanUsaha = await this.businessTypeBadanUsaha.isVisible();
+    return perseorangan && badanUsaha;
+  }
+
+  // Get placeholder text
+  async getNamePlaceholder() {
+    return await this.nameInput.getAttribute('placeholder');
+  }
+
+  async getEmailPlaceholder() {
+    return await this.emailInput.getAttribute('placeholder');
+  }
+
+  async getPhonePlaceholder() {
+    return await this.phoneInput.getAttribute('placeholder');
+  }
+
+  async getPasswordPlaceholder() {
+    return await this.passwordInput.getAttribute('placeholder');
+  }
+
+  // Verify all page elements are present
+  async verifyAllElementsPresent() {
+    const elements = {
+      nameInput: await this.isNameInputVisible(),
+      emailInput: await this.isEmailInputVisible(),
+      phoneInput: await this.isPhoneInputVisible(),
+      passwordInput: await this.isPasswordInputVisible(),
+      businessTypes: await this.areBusinessTypeOptionsVisible(),
+      submitButton: await this.isSubmitButtonVisible(),
+      loginButton: await this.isLoginButtonVisible(),
+      termsLink: await this.termsLink.isVisible(),
+      privacyLink: await this.privacyLink.isVisible(),
+    };
+    
+    return elements;
+  }
+
+  // Get validation error messages (if any)
+  async getValidationErrors() {
+    const errorSelectors = [
+      '.error',
+      '.invalid-feedback',
+      '[class*="error"]',
+      '[role="alert"]',
+      '.text-danger',
+      '[class*="invalid"]'
+    ];
+    
+    const errors = [];
+    for (const selector of errorSelectors) {
+      const elements = await this.page.locator(selector).all();
+      for (const el of elements) {
+        const isVisible = await el.isVisible();
+        if (isVisible) {
+          const text = await el.textContent();
+          if (text?.trim()) {
+            errors.push(text.trim());
+          }
+        }
+      }
+    }
+    
+    return errors;
+  }
+
+  // Wait for navigation after form submission
+  async waitForNavigation() {
+    await this.page.waitForURL(/\/(dashboard|verification|success)/, { timeout: 10000 });
+  }
+
+  // Check if form submitted successfully (URL changed)
+  async isFormSubmitted() {
+    const url = this.page.url();
+    return !url.includes('/signup');
   }
 }

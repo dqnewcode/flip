@@ -6,6 +6,9 @@ test-results/
 playwright-report/
 playwright/.cache/
 
+# Generated reports (keep only structure, not generated files)
+docs/Test-Report.pdf
+
 # Build output
 dist/
 
